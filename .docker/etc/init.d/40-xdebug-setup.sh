@@ -29,12 +29,12 @@ log "Preparing Xdebug configuration..." $magenta
 if [[ -z $XDEBUG_ENABLE || -z $XDEBUG_IDEKEY ]]; then
   log "One or more variables are undefined. Skipping..." $red
 else
-    echo "xdebug.remote_enable=$XDEBUG_ENABLE" >> /etc/php/7.0/mods-available/xdebug.ini \
-    && echo "xdebug.remote_autostart=off" >> /etc/php/7.0/mods-available/xdebug.ini \
-    && echo "xdebug.remote_connect_back=on" >> /etc/php/7.0/mods-available/xdebug.ini \
-    && echo "xdebug.remote_port=9000" >> /etc/php/7.0/mods-available/xdebug.ini \
-    && echo "xdebug.max_nesting_level=1000" >> /etc/php/7.0/mods-available/xdebug.ini \
-    && echo "xdebug.idekey=$XDEBUG_IDEKEY" >> /etc/php/7.0/mods-available/xdebug.ini
+    echo "xdebug.remote_enable=$XDEBUG_ENABLE" >> /etc/php5/mods-available/xdebug.ini \
+    && echo "xdebug.remote_autostart=off" >> /etc/php5/mods-available/xdebug.ini \
+    && echo "xdebug.remote_connect_back=on" >> /etc/php5/mods-available/xdebug.ini \
+    && echo "xdebug.remote_port=9000" >> /etc/php5/mods-available/xdebug.ini \
+    && echo "xdebug.max_nesting_level=1000" >> /etc/php5/mods-available/xdebug.ini \
+    && echo "xdebug.idekey=$XDEBUG_IDEKEY" >> /etc/php5/mods-available/xdebug.ini
 
     log "Set Xdebug with remote_enable $XDEBUG_ENABLE and idekey: $XDEBUG_IDEKEY" $yellow
 fi

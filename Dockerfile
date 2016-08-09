@@ -1,38 +1,30 @@
 # Import base image
 FROM birkof/ubuntu
 
-# PHP7.0 & Java repo & Blackfire.io && latest Node.js package
+# PHP5.6 & Java repo & Blackfire.io && latest Node.js package
 RUN export LANG=C.UTF-8 \
-    && add-apt-repository -y ppa:ondrej/php \
+    && add-apt-repository -y ppa:ondrej/php5-5.6 \
     && wget -O - https://packagecloud.io/gpg.key | sudo apt-key add - \
     && echo "deb http://packages.blackfire.io/debian any main" | sudo tee /etc/apt/sources.list.d/blackfire.list \
-    && curl -sL https://deb.nodesource.com/setup_6.x | bash - \
+    && curl -sL https://deb.nodesource.com/setup_4.x | bash - \
     && apt-get install -yq --no-install-recommends nodejs
 
-# Install nginx & php7-fpm package and some dependecies
+# Install nginx & php5.6-fpm package and some dependecies
 RUN apt-get install -yq --no-install-recommends \
     nginx \
-    php7.0 \
-    php7.0-dev \
-    php7.0-fpm \
-    php7.0-mysql \
-    php7.0-mcrypt \
-    php7.0-mbstring \
-    php7.0-bcmath \
-    php7.0-soap \
-    php7.0-json \
-    php7.0-xml \
-    php7.0-xmlrpc \
-    php7.0-zip \
-    php7.0-gd \
-    php7.0-curl \
-    php7.0-ldap \
-    php7.0-intl \
-    php7.0-opcache \
-    php-xdebug \
-    php-redis \
-    php-apcu \
-    php-memcached \
+    php5-common \
+    php5-fpm \
+    php5-cli \
+    php5-mcrypt \
+    php5-mysql \
+    php5-apcu \
+    php5-gd \
+    php5-imagick \
+    php5-curl \
+    php5-intl \
+    php5-memcache \
+    php5-memcached \
+    php5-xdebug \
     php-pear \
     blackfire-php
 
@@ -40,16 +32,16 @@ RUN apt-get install -yq --no-install-recommends \
 ADD .docker /
 
 # Set timezone in php.ini
-RUN sed -i".bak" "s@^;date.timezone =.*@date.timezone = $TIMEZONE@" /etc/php/7.0/*/php.ini
+RUN sed -i".bak" "s@^;date.timezone =.*@date.timezone = $TIMEZONE@" /etc/php5/*/php.ini
 
 # Tweak php-fpm logging
-RUN mkdir -p /var/log/php7 \
-    && sed -i 's/;log_level = .*/log_level = debug/g' /etc/php/7.0/fpm/php-fpm.conf \
-    && sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php/7.0/fpm/php-fpm.conf \
-    && sed -i -e "s/^\error_log = .*$/error_log = \/var\/log\/php7\/php-fpm.log/g" /etc/php/7.0/fpm/php-fpm.conf
+RUN mkdir -p /var/log/php5 \
+    && sed -i 's/;log_level = .*/log_level = debug/g' /etc/php5/fpm/php-fpm.conf \
+    && sed -i 's/;daemonize = yes/daemonize = no/g' /etc/php5/fpm/php-fpm.conf \
+    && sed -i -e "s/^\error_log = .*$/error_log = \/var\/log\/php5\/php-fpm.log/g" /etc/php5/fpm/php-fpm.conf
 
 # Activate CLI extensions
-RUN find /etc/php/7.0/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
+RUN find /etc/php5/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 
 # Change the UID of www-data for OSX writing permission problem
 RUN usermod -u 1000 www-data
